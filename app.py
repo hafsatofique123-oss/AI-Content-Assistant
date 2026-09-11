@@ -8,18 +8,17 @@ st.set_page_config(page_title="AI Content Assistant", page_icon="📝", layout="
 st.title("📝 AI Social Media Content Assistant")
 st.write("Generate tailored posts, captions, and hashtags in seconds using Groq AI.")
 
-# Sidebar for API Key handling
-st.sidebar.header("Configuration")
-
-# Get API key from environment secrets first, otherwise ask user in sidebar
-api_key = os.environ.get("GROQ_API_KEY") or st.sidebar.text_input("Enter Groq API Key", type="password")
+# Fetch API Key automatically from Streamlit Secrets or Environment Secrets
+api_key = st.secrets.get("GROQ_API_KEY") or os.environ.get("GROQ_API_KEY")
 
 if not api_key:
-    st.info("💡 Please enter your Groq API Key in the sidebar or set it up in Streamlit Secrets to continue.")
-    st.markdown("[Get a free Groq API Key here](https://console.groq.com/keys)")
-    st.stop()
+    # Optional fallback input only if Secrets are completely empty
+    api_key = st.sidebar.text_input("Enter Groq API Key", type="password")
+    if not api_key:
+        st.error("🔑 API Key missing! Please ensure GROQ_API_KEY is added to Streamlit Secrets.")
+        st.stop()
 
-# Initialize Groq client
+# Initialize Groq client with the secret key
 client = Groq(api_key=api_key)
 
 # Input Controls
@@ -69,7 +68,6 @@ if st.button("🚀 Generate Post", type="primary", use_container_width=True):
             """
 
             try:
-                # Active free production model on your Groq dashboard
                 response = client.chat.completions.create(
                     model="openai/gpt-oss-120b",
                     messages=[
