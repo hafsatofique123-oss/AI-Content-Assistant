@@ -69,7 +69,7 @@ if st.button("🚀 Generate Post", type="primary", use_container_width=True):
             """
 
             try:
-                # Call Groq API using Llama 3 model
+                # Active and fast Groq model ID
                 response = client.chat.completions.create(
                     model="llama-3.1-8b-instant",
                     messages=[
