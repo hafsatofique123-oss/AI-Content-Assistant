@@ -11,6 +11,7 @@ st.write("Generate tailored posts, captions, and hashtags in seconds using Groq 
 # Sidebar for API Key handling
 st.sidebar.header("Configuration")
 
+# Get API key from environment secrets first, otherwise ask user in sidebar
 api_key = os.environ.get("GROQ_API_KEY") or st.sidebar.text_input("Enter Groq API Key", type="password")
 
 if not api_key:
@@ -68,9 +69,9 @@ if st.button("🚀 Generate Post", type="primary", use_container_width=True):
             """
 
             try:
-                # 100% Free Supported Model on Groq
+                # Active free production model on your Groq dashboard
                 response = client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="openai/gpt-oss-120b",
                     messages=[
                         {"role": "system", "content": "You are a professional social media content assistant."},
                         {"role": "user", "content": prompt}
